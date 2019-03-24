@@ -1,0 +1,52 @@
+<IfModule mod_php5.c>
+# php_value memory_limit 128M
+# php_value max_execution_time 300
+# php_value mysql.connect_timeout 300
+</IfModule>
+options -multiviews
+<IfModule mod_rewrite.c>
+RewriteEngine On 
+RewriteBase /
+# RewriteCond %{HTTP_HOST} ^yourdomain.com [NC]
+# RewriteRule ^(.*)$ http://www.yourdomain.com/$1 [L,R=301]
+RewriteRule ^signup$ signup.php
+RewriteRule ^twitter_signup$ twitter_signup.php
+RewriteRule ^settings$ settings.php
+RewriteRule ^logout$ logout.php
+RewriteRule ^login$ login.php
+RewriteRule ^delete-account$ delete-account.php
+RewriteRule ^submit$ submit.php
+RewriteRule ^gag/?([^/.]+)?/?(.*)$ view.php?pid=$1
+RewriteRule ^safe$ safe.php
+RewriteRule ^hot$ hot.php
+RewriteRule ^about$ static.php?stid=1
+RewriteRule ^tos$ static.php?stid=2
+RewriteRule ^faq$ static.php?stid=3
+RewriteRule ^privacy$ static.php?stid=4
+RewriteRule ^random$ random.php
+RewriteRule ^vote$ vote.php
+RewriteRule ^fresh$ vote.php
+RewriteRule ^trending$ trending.php
+RewriteRule ^channels/([^/.]+)?/?$ channels.php?cname=$1&%{QUERY_STRING}
+RewriteRule ^topposts$ topposts.php
+RewriteRule ^topusers$ topusers.php
+RewriteRule ^search$ search.php
+RewriteRule ^fast$ fast.php
+RewriteRule ^user/([^/.]+)?/timeline?/?$ user_timeline.php?uname=$1&%{QUERY_STRING}
+RewriteRule ^user/([^/.]+)?/posts?/?$ user_posts.php?uname=$1&%{QUERY_STRING}
+RewriteRule ^user/([^/.]+)?/likes?/?$ likes.php?uname=$1&%{QUERY_STRING}
+RewriteRule ^user/([^/.]+)?/bookmarks?/?$ bookmarks.php?uname=$1&%{QUERY_STRING}
+RewriteRule ^user/([^/.]+)?/comments?/?$ comments_user.php?uname=$1&%{QUERY_STRING}
+RewriteRule ^user/([^/.]+)?$ user.php?uname=$1&%{QUERY_STRING}
+RewriteRule ^contact$ contact.php
+RewriteRule ^notifications$ notifications.php
+RewriteRule ^recover$ recover.php
+RewriteRule ^staff$ staff.php
+RewriteRule ^pages/([^/.]+)?/?(.*)$ pages.php?PAGEID=$1
+RewriteRule ^gifs$ gifs.php
+RewriteRule ^videos$ videos.php
+</IfModule>
+<IfModule mod_security.c>
+SecFilterEngine Off
+SecFilterScanPOST Off
+</IfModule>

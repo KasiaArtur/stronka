@@ -1,0 +1,42 @@
+options -multiviews
+# nginx configuration
+ location = /signup { rewrite ^(.*)$ /signup.php;  }
+ location = /twitter_signup { rewrite ^(.*)$ /twitter_signup.php;  }
+ location = /settings { rewrite ^(.*)$ /settings.php;  }
+ location = /logout { rewrite ^(.*)$ /logout.php;  }
+ location = /login { rewrite ^(.*)$ /login.php;  }
+ location /delete { rewrite ^/delete-account$ /delete-account.php;  }
+ location = /submit { rewrite ^(.*)$ /submit.php;  }
+ location /gag { rewrite ^/gag/([^/.]+)?/?(.*)$ /view.php?pid=$1;  }
+ location = /safe { rewrite ^(.*)$ /safe.php;  }
+ location = /hot { rewrite ^(.*)$ /hot.php;  }
+ location = /about { rewrite ^(.*)$ /static.php?stid=1;  }
+ location = /tos { rewrite ^(.*)$ /static.php?stid=2;  }
+ location = /faq { rewrite ^(.*)$ /static.php?stid=3;  }
+ location = /privacy { rewrite ^(.*)$ /static.php?stid=4;  }
+ location = /random { rewrite ^(.*)$ /random.php;  }
+ location = /vote { rewrite ^(.*)$ /vote.php;  }
+ location = /fresh { rewrite ^(.*)$ /vote.php;  }
+ location = /trending { rewrite ^(.*)$ /trending.php;  }
+ location /channels { rewrite ^/channels/([^/.]+)?/?$ /channels.php?cname=$1&$query_string;  }
+ location = /topposts { rewrite ^(.*)$ /topposts.php;  }
+ location = /topusers { rewrite ^(.*)$ /topusers.php;  }
+ location = /search { rewrite ^(.*)$ /search.php;  }
+ location = /fast { rewrite ^(.*)$ /fast.php;  }
+ location /user { rewrite ^/user/([^/.]+)?/timeline?/?$ /user_timeline.php?uname=$1&$query_string;  rewrite ^/user/([^/.]+)?/likes?/?$ /likes.php?uname=$1&$query_string;  rewrite ^/user/([^/.]+)?/posts?/?$ /user_posts.php?uname=$1&$query_string;  rewrite ^/user/([^/.]+)?/bookmarks?/?$ /bookmarks.php?uname=$1&$query_string; rewrite ^/user/([^/.]+)?/comments?/?$ /comments_user.php?uname=$1&$query_string; rewrite ^/user/([^/.]+)?$ /user.php?uname=$1&$query_string;  }
+ location = /contact { rewrite ^(.*)$ /contact.php;  }
+ location = /notifications { rewrite ^(.*)$ /notifications.php;  }
+ location = /recover { rewrite ^(.*)$ /recover.php;  }
+ location = /staff { rewrite ^(.*)$ /staff.php;  }
+ location /pages { rewrite ^/pages/([^/.]+)?/?(.*)$ /pages.php?PAGEID=$1;  }
+ location = /gifs { rewrite ^(.*)$ /gifs.php;  }
+ location = /videos { rewrite ^(.*)$ /videos.php;  }
+# end nginx configuration
+<IfModule mod_security.c> 
+   # Turn off mod_security filtering. 
+   SecFilterEngine Off 
+
+   # The below probably isn't needed, 
+   # but better safe than sorry. 
+   SecFilterScanPOST Off 
+</IfModule>

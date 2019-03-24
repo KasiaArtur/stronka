@@ -1,0 +1,105 @@
+<?php
+
+
+include("inc/include.php");
+
+if(isset($_REQUEST['page'])){$page = intval($_REQUEST['page']);}else{$page = "1";}
+$currentpage = $page;
+if ($page >=2){$pagingstart = ($page-1)*$config['items_per_page'];}
+else{$pagingstart = "0";}
+
+if(isset($_REQUEST['cname']))
+{
+	$cname2 = cleanit($_REQUEST['cname']);
+	$query1 = "select * from channels"; 
+	$results1=$dbconn->execute($query1);
+	$cnames = $results1->getrows();
+	$cnamescount = count($cnames);
+	for ($i = 0; $i < $cnamescount; $i++)
+	{
+		if( makeseo($cnames[$i]["cname"]) == $cname2)
+		{
+			$CID = $cnames[$i]["CID"];
+			$cname = $cnames[$i]["cname"];
+			STemplate::assign('CID',$CID);
+			STemplate::assign('cname',$cname);
+			STemplate::assign('pagetitle',$cname);
+			break;
+		}
+	}
+	if(!isset($CID)){$CID = '';}
+	if($CID != "" && intval($CID) > 0)
+	{
+		$query1 = "SELECT count(*) as total from posts A, users B, channels_posts C where A.active='1' AND A.USERID=B.USERID AND A.PID=C.PID AND C.CID=$CID order by C.PID desc limit $config[maximum_results]";
+		$query2 = "SELECT A.*, B.username from posts A, users B, channels_posts C where A.active='1' AND A.USERID=B.USERID AND A.PID=C.PID AND C.CID=$CID order by C.PID desc limit $pagingstart, $config[items_per_page]";
+		$executequery1 = $dbconn->Execute($query1);
+		$totalposts = $executequery1->fields['total'];
+		if ($totalposts > 0)
+		{
+			$executequery2 = $dbconn->Execute($query2);
+			$posts = $executequery2->getrows();
+			$posts = gif_detector($posts);
+			STemplate::assign('posts',$posts);
+			$theprevpage=$currentpage-1;
+			$thenextpage=$currentpage+1;
+			if($currentpage > 1){STemplate::assign('tpp',$theprevpage);}
+			$currentposts = $currentpage * $config['items_per_page'];
+			if($totalposts > $currentposts){STemplate::assign('tnp',$thenextpage);}
+		}
+	}
+	else
+	{
+		$error = $errors['46'];
+		$template = "empty.tpl";
+		STemplate::assign('norightside',1);
+	}
+	$_SESSION['location'] = "/channels/".$cname2."/?page=".$currentpage;
+	STemplate::assign('cname2',$cname2);
+}
+else
+{
+	$error = $errors['46'];
+	$template = "empty.tpl";
+	STemplate::assign('norightside',1);
+}
+	
+if ($config['topgags'] > 0)
+{
+	$topgags = load_topgags();
+	STemplate::assign('topgags',$topgags);
+}	
+
+if ($config['rhome'] == 1)
+{
+	$r = load_rhome();
+	STemplate::assign('r',$r);
+}
+
+if ($config['channels'] == 1)
+{
+	$cats = loadallchannels();
+	$c = loadtopchannels($cats);
+	STemplate::assign('allchannels',$cats);
+	STemplate::assign('c',$c);
+}
+
+if($config['tag_cloud_front'] == 1)
+{
+	$tags_cloud = load_cloud_tag();
+	STemplate::assign('tags_cloud',$tags_cloud);
+}
+
+//TEMPLATES BEGIN
+if($config['AUTOSCROLL'] != "1"){STemplate::assign('footerlinks',1);}
+STemplate::assign('menu',5);
+STemplate::assign('page',$page);
+if(isset($error))
+{
+	STemplate::assign('error',$error);
+	STemplate::assign('pagetitle',$lang['9']);
+}
+STemplate::display('header.tpl');
+STemplate::display('channels.tpl');
+STemplate::display('footer.tpl');
+//TEMPLATES END
+?>
